@@ -1,4 +1,5 @@
 require('dotenv').config()
+const helmet = require('helmet')
 const path = require('path')
 const express = require('express')
 const databaseMiddleware = require('./middleware/db-middleware.js')
@@ -15,6 +16,7 @@ const swaggerDocument = yaml.parse(file)
 const bodyParser = require('body-parser')
 const ejs = require('ejs')
 
+
 const app = express()
 
 app.set('view engine', 'ejs');
@@ -28,6 +30,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(express.json())
 
 app.use(databaseMiddleware)
+
+app.use(helmet());
+app.use(helmet.frameguard( {action: 'deny'}))
+
 
 // app.use(OpenApiValidator.middleware({
 //     apiSpec: openApiPath,
