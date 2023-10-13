@@ -22,19 +22,26 @@ const getAllBlog = async (req, res) => {
 
 
 const createBlog = async (req, res) => {
-    const { title, author } = req.body
+    const { title } = req.body;
+    const { user } = req; 
 
-    try{
-        const newBlog = await req.db.collection('blogs').insertOne({ title, author })
+    try {
+        if (user) {
+            const author = user.username; 
+            const newBlog = await req.db.collection('blogs').insertOne({ title, author });
 
-        res.status(200).json({
-            message: 'Blog Successfully created',
-            data: newBlog
-        })
-    }catch(error){
-        res.status(400).json({ error: error.message })
+            res.status(200).json({
+                message: 'Blog Successfully created',
+                data: newBlog
+            });
+        } else {
+            res.status(401).json({ error: 'User is not authenticated' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 }
+
 
 const updateBlog = async (req, res) => {
     const id = req.params

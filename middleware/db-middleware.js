@@ -1,8 +1,8 @@
 const { MongoClient} = require('mongodb')
 
 const databaseMiddleware = async (req, res, next) => {
-    const mongoClient = await new MongoClient ("mongodb://mongo:7SrVXhXt35C1CnkGHJo7@containers-us-west-61.railway.app:5475").connect()
-    db = mongoClient.db('blogs')
+    const mongoClient = await new MongoClient ("mongodb://mongo:a7RNywOETnFdIiEPDMrb@containers-us-west-76.railway.app:6151").connect()
+    db = mongoClient.db('myproject')
 
     req.db = db
 

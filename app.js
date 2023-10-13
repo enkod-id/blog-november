@@ -15,9 +15,11 @@ const file = fs.readFileSync(openApiPath, 'utf8')
 const swaggerDocument = yaml.parse(file)
 const bodyParser = require('body-parser')
 const ejs = require('ejs')
+const cors = require('cors');
 
 
 const app = express()
+app.use(cors());
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -34,7 +36,22 @@ app.use(databaseMiddleware)
 app.use(helmet());
 app.use(helmet.frameguard( {action: 'deny'}))
 
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
 
+app.use((error, req, res, next) => {
+    const status = error.status || 500;
+    const message = error.message || 'Something went wrong.';
+    res.status(status).json({ message: message });
+  });
+  
+
+//app.use(cors(corsOptions));
 // app.use(OpenApiValidator.middleware({
 //     apiSpec: openApiPath,
 //     validateRequest:true
@@ -65,7 +82,7 @@ app.get('/', async (req, res) => {
 
 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
     console.log(`Running on port http://locahost:${port}`)
