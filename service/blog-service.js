@@ -7,7 +7,7 @@ const getIndex = async (req, res) => {
 }    
 
 const getAllBlog = async (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
+    
     try{
         const blogs = await req.db.collection('blogs').find().toArray()
 
